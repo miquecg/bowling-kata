@@ -23,5 +23,12 @@ rolls_without_bonuses_test_() ->
         ]
     }.
 
+rolls_with_spares_test_() ->
+    {foreach,
+        fun start/0,
+        fun stop/1,
+        [fun(PID) -> ?_assertEqual(12, do_rolls([7, 3, 1], PID)) end]
+    }.
+
 do_rolls(Rolls, PID) ->
     lists:foldl(fun(KnockedPins, _Points) -> bowling_game:roll(PID, KnockedPins) end, 0, Rolls).

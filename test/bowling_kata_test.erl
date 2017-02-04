@@ -16,7 +16,10 @@ rolls_without_bonuses_test_() ->
         fun stop/1,
         [
             fun(PID) -> ?_assertEqual(0, do_rolls(lists:duplicate(20, 0), PID)) end,
-            fun(PID) -> ?_assertEqual(20, do_rolls(lists:duplicate(20, 1), PID)) end
+            fun(PID) -> ?_assertEqual(20, do_rolls(lists:duplicate(20, 1), PID)) end,
+            fun(PID) -> ?_assertEqual(7, do_rolls([3, 4], PID)) end,
+            fun(PID) -> ?_assertEqual(15, do_rolls([5, 1, 2, 7], PID)) end,
+            fun(PID) -> ?_assertEqual(24, do_rolls([3, 5, 4, 0, 6, 6], PID)) end
         ]
     }.
 

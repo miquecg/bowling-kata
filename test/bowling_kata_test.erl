@@ -18,11 +18,4 @@ rolls_without_bonuses_test_() ->
     }.
 
 do_rolls(Rolls, PID) ->
-    lists:foldl(
-        fun(KnockedPins, _Points) ->
-            bowling_game:roll(PID, KnockedPins),
-            bowling_game:points(PID)
-        end,
-        0,
-        Rolls
-    ).
+    lists:foldl(fun(KnockedPins, _Points) -> bowling_game:roll(PID, KnockedPins) end, 0, Rolls).

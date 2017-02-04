@@ -30,7 +30,8 @@ rolls_with_spares_test_() ->
         [
             fun(PID) -> ?_assertEqual(12, do_rolls([7, 3, 1], PID)) end,
             fun(PID) -> ?_assertEqual(33, do_rolls([7, 3, 4, 5, 1, 9], PID)) end,
-            fun(PID) -> ?_assertEqual(31, do_rolls([7, 3, 1, 9, 4, 2], PID)) end
+            fun(PID) -> ?_assertEqual(31, do_rolls([7, 3, 1, 9, 4, 2], PID)) end,
+            fun(PID) -> ?_assertEqual(39, do_rolls([2, 8, 4, 6, 5, 5], PID)) end
         ]
     }.
 

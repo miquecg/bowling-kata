@@ -27,7 +27,10 @@ rolls_with_spares_test_() ->
     {foreach,
         fun start/0,
         fun stop/1,
-        [fun(PID) -> ?_assertEqual(12, do_rolls([7, 3, 1], PID)) end]
+        [
+            fun(PID) -> ?_assertEqual(12, do_rolls([7, 3, 1], PID)) end,
+            fun(PID) -> ?_assertEqual(33, do_rolls([7, 3, 4, 5, 1, 9], PID)) end
+        ]
     }.
 
 do_rolls(Rolls, PID) ->

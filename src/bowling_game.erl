@@ -47,6 +47,8 @@ stop(PID) ->
 init([]) ->
     {ok, []}.
 
+handle_call({roll, _KnockedPins}, _From, State) ->
+    {reply, 0, State};
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
 

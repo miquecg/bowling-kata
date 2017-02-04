@@ -3,6 +3,7 @@
 %% API
 -export([
     new/0,
+    roll/2,
     stop/1
 ]).
 
@@ -25,6 +26,11 @@
     {ok, pid()} | ignore | {error, Error :: {already_started, pid()} | term()}.
 new() ->
     gen_server:start(?MODULE, [], []).
+
+-spec roll(PID :: pid(), KnockedPins :: 0..10) ->
+    0..300.
+roll(PID, KnockedPins) ->
+    gen_server:call(PID, {roll, KnockedPins}).
 
 -spec stop(PID :: pid()) ->
     ok.

@@ -24,7 +24,7 @@
 
 -record(state, {
     score = 0 :: score(),
-    frame = [] :: list(),
+    frame = [] :: [roll()],
     bonus = [] :: [bonus()]
 }).
 -type game() :: #state{}.

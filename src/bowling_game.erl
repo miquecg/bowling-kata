@@ -45,10 +45,11 @@ stop(PID) ->
 %%===================================================================
 
 init([]) ->
-    {ok, []}.
+    {ok, 0}.
 
-handle_call({roll, _KnockedPins}, _From, State) ->
-    {reply, 0, State};
+handle_call({roll, KnockedPins}, _From, State) ->
+    Points = State + KnockedPins,
+    {reply, Points, Points};
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
 

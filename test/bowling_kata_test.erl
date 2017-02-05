@@ -42,7 +42,8 @@ rolls_with_strikes_test_() ->
         [
             fun(PID) -> ?_assertEqual(28, do_rolls([10, 4, 5], PID)) end,
             fun(PID) -> ?_assertEqual(50, do_rolls([10, 10, 6, 1], PID)) end,
-            fun(PID) -> ?_assertEqual(78, do_rolls([10, 10, 10, 4, 3], PID)) end
+            fun(PID) -> ?_assertEqual(78, do_rolls([10, 10, 10, 4, 3], PID)) end,
+            fun(PID) -> ?_assertEqual(52, do_rolls([10, 0, 7, 10, 5, 4], PID)) end
         ]
     }.
 

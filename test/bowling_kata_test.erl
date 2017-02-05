@@ -39,7 +39,10 @@ rolls_with_strikes_test_() ->
     {foreach,
         fun start/0,
         fun stop/1,
-        [fun(PID) -> ?_assertEqual(28, do_rolls([10, 4, 5], PID)) end]
+        [
+            fun(PID) -> ?_assertEqual(28, do_rolls([10, 4, 5], PID)) end,
+            fun(PID) -> ?_assertEqual(50, do_rolls([10, 10, 6, 1], PID)) end
+        ]
     }.
 
 do_rolls(Rolls, PID) ->

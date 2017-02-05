@@ -18,7 +18,7 @@
 ]).
 
 %% Types
--type bonus() :: x2.
+-type bonus() :: x1 | x2.
 -type roll() :: 0..10.
 -type score() :: 0..300.
 
@@ -60,9 +60,8 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({roll, KnockedPins}, _From, Game) ->
-    NewGame1 = update_score(KnockedPins, Game),
-    NewGame2 = update_frame(KnockedPins, NewGame1),
-    NewGame = update_bonus(NewGame2),
+    NewGame1 = update_frame(KnockedPins, Game),
+    NewGame = update_score(KnockedPins, NewGame1),
     {reply, NewGame#state.score, NewGame};
 handle_call(_Request, _From, Game) ->
     {reply, ok, Game}.
@@ -84,17 +83,6 @@ code_change(_OldVersion, Game, _Extra) ->
 %% Internal functions
 %%===================================================================
 
--spec update_score(KnockedPins :: roll(), Game :: game()) ->
-    game().
-update_score(KnockedPins, #state{bonus = [], score = Score} = Game) ->
-    Game#state{score = Score + KnockedPins};
-update_score(KnockedPins, #state{bonus = [x2 | NextBonuses], score = Score} = Game) ->
-    BonusedRoll = KnockedPins * 2,
-    Game#state{
-        score = Score + BonusedRoll,
-        bonus = NextBonuses
-    }.
-
 -spec update_frame(KnockedPins :: roll(), Game :: game()) ->
     game().
 update_frame(KnockedPins, #state{frame = [_, _]} = Game) ->
@@ -104,11 +92,32 @@ update_frame(KnockedPins, #state{frame = [10]} = Game) ->
 update_frame(KnockedPins, #state{frame = Frame} = Game) when is_list(Frame) ->
     Game#state{frame = [KnockedPins | Frame]}.
 
--spec update_bonus(Game :: game()) ->
+-spec update_score(KnockedPins :: roll(), Game :: game()) ->
     game().
-update_bonus(#state{frame = [SecondRoll, FirstRoll], bonus = Bonus} = Game) when SecondRoll + FirstRoll =:= 10 ->
-    Game#state{bonus = lists:append(Bonus, [x2])};
-update_bonus(#state{frame = [10], bonus = Bonus} = Game) ->
-    Game#state{bonus = lists:append(Bonus, [x2, x2])};
-update_bonus(#state{} = Game) ->
+update_score(KnockedPins, #state{bonus = Bonus, score = Score} = Game) ->
+    {BonusPoints, NextBonuses} = apply_bonus_to_roll(KnockedPins, Bonus),
+    NewGame = Game#state{
+        score = Score + KnockedPins + BonusPoints,
+        bonus = NextBonuses
+    },
+    update_bonus_for_next_rolls(NewGame).
+
+-spec apply_bonus_to_roll(KnockedPins :: roll(), [bonus()]) ->
+    {pos_integer(), NextBonuses :: [bonus()]}.
+apply_bonus_to_roll(_, []) ->
+    {0, []};
+apply_bonus_to_roll(KnockedPins, [x1 | NextBonuses]) ->
+    {KnockedPins, NextBonuses};
+apply_bonus_to_roll(KnockedPins, [x2 | NextBonuses]) ->
+    {KnockedPins * 2, NextBonuses}.
+
+-spec update_bonus_for_next_rolls(Game :: game()) ->
+    game().
+update_bonus_for_next_rolls(#state{frame = [SecondRoll, FirstRoll]} = Game) when SecondRoll + FirstRoll =:= 10 ->
+    Game#state{bonus = [x1]};
+update_bonus_for_next_rolls(#state{frame = [10], bonus = []} = Game) ->
+    Game#state{bonus = [x1, x1]};
+update_bonus_for_next_rolls(#state{frame = [10], bonus = [x1]} = Game) ->
+    Game#state{bonus = [x2, x1]};
+update_bonus_for_next_rolls(#state{} = Game) ->
     Game.

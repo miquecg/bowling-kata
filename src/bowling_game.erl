@@ -99,6 +99,8 @@ update_score(KnockedPins, #state{bonus = [x2 | NextBonuses], score = Score} = Ga
     game().
 update_frame(KnockedPins, #state{frame = [_, _]} = Game) ->
     Game#state{frame = [KnockedPins]};
+update_frame(KnockedPins, #state{frame = [10]} = Game) ->
+    Game#state{frame = [KnockedPins]};
 update_frame(KnockedPins, #state{frame = Frame} = Game) when is_list(Frame) ->
     Game#state{frame = [KnockedPins | Frame]}.
 
@@ -106,5 +108,7 @@ update_frame(KnockedPins, #state{frame = Frame} = Game) when is_list(Frame) ->
     game().
 update_bonus(#state{frame = [SecondRoll, FirstRoll], bonus = Bonus} = Game) when SecondRoll + FirstRoll =:= 10 ->
     Game#state{bonus = lists:append(Bonus, [x2])};
+update_bonus(#state{frame = [10], bonus = Bonus} = Game) ->
+    Game#state{bonus = lists:append(Bonus, [x2, x2])};
 update_bonus(#state{} = Game) ->
     Game.

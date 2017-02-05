@@ -35,5 +35,12 @@ rolls_with_spares_test_() ->
         ]
     }.
 
+rolls_with_strikes_test_() ->
+    {foreach,
+        fun start/0,
+        fun stop/1,
+        [fun(PID) -> ?_assertEqual(28, do_rolls([10, 4, 5], PID)) end]
+    }.
+
 do_rolls(Rolls, PID) ->
     lists:foldl(fun(KnockedPins, _Points) -> bowling_game:roll(PID, KnockedPins) end, 0, Rolls).
